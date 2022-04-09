@@ -37,6 +37,10 @@ bool cadcam::Cylinder::ContainsPoint(const mwTPoint3d<double> &point) const {
         results[0] * inverseEquations[1][0] + results[1] * inverseEquations[1][1]
     };
 
-    return barycentricParams[0] >= 0 and barycentricParams[0] <= 1 and
-            barycentricParams[1] >= 0 and barycentricParams[1] <= 1;
+    // check if point is in bounds of cylinder
+    if (barycentricParams[0] >= 0 and barycentricParams[0] <= 1 and
+        barycentricParams[1] >= 0 and barycentricParams[1] <= 1) {
+        return ~(closestVec - point) <= radius_;
+    }
+    return false;
 }
