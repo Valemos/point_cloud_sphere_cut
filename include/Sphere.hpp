@@ -18,6 +18,6 @@ public:
 
 private:
     mwTPoint3d<double> center_;
-    float radius_;
+    double radius_;
 };
 }

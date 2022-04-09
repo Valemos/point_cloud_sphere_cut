@@ -6,7 +6,8 @@ cadcam::Sphere::Sphere(const mwTPoint3d<double>& center, double radius) : center
 }
 
 bool cadcam::Sphere::ContainsPoint(const mwTPoint3d<double> &point) const {
-    return false;
+    auto distanceSquared = point - center_;
+    return distanceSquared * distanceSquared < radius_ * radius_;
 }
 
 const cadcam::mwTPoint3d<double> &cadcam::Sphere::center() const {
