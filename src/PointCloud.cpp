@@ -1,6 +1,7 @@
 #include "PointCloud.hpp"
 #include <VolumeGridScanner.hpp>
 #include <VolumeGridScanner.hpp>
+#include <fstream>
 
 cadcam::PointCloud::PointCloud(const point3d &referencePoint,
                                unsigned long nx,
@@ -83,5 +84,31 @@ size_t cadcam::PointCloud::sizeZ() const {
         return points_[0][0].size();
     }
     return 0;
+}
+
+void cadcam::PointCloud::SaveSkin(const std::string &fileName) {
+    std::ofstream stream {fileName};
+    for (const auto& point : GetSkinPoints()) {
+        stream << point.x() << " " << point.y() << " " << point.z() << '\n';
+    }
+    stream.close();
+}
+
+std::vector<cadcam::PointCloud::point3d> cadcam::PointCloud::GetSkinPoints() {
+    std::vector<point3d> skinPoints {};
+    skinPoints.reserve(sizeX() * sizeY());
+
+    for (size_t x = 0; x < sizeX(); ++x) {
+        for (size_t y = 0; y < sizeY(); ++y) {
+            auto& zColumn = points_[x][y];
+            size_t topPointIndex = sizeZ();
+            while(not zColumn[topPointIndex]) {
+                topPointIndex--;
+            }
+            skinPoints.push_back(IndicesToPoint(x, y, topPointIndex));
+        }
+    }
+
+    return skinPoints;
 }
 

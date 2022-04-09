@@ -22,6 +22,8 @@ void CreateSkin( const cadcam::mwTPoint3d<double>& refPoint,
         time += deltaT;
 
         cadcam::SphereLinearMotion motion(sphereTool, next_point);
-
+        cloud.RemoveIntersection(&motion);
     }
+
+    cloud.SaveSkin(skinFileName);
 }
