@@ -72,7 +72,8 @@ void VolumeGridScanner<T>::IncrementZ() {
 
 template<class T>
 mwTPoint3d<T> VolumeGridScanner<T>::NextPoint() {
+    mwTPoint3d<T> point {currentPoint_};
     IncrementX();
-    return currentPoint_;
+    return point;
 }
 }
