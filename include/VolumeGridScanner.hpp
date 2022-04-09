@@ -10,16 +10,14 @@ public:
                       const mwTPoint3d<T>& finishPoint,
                       T gridStep);
 
+    mwTPoint3d<T> NextPoint();
+
     void IncrementX();
     void IncrementY();
     void IncrementZ();
 
-    const mwTPoint3d<T>& point() const {
-        return currentPoint_;
-    }
-
-    bool IsFinished() const {
-        return iterationFinished_;
+    bool InProgress() const {
+        return inProgress_;
     }
 
 private:
@@ -28,7 +26,7 @@ private:
     mwTPoint3d<T> currentPoint_{};
     T step_{};
 
-    bool iterationFinished_ {false};
+    bool inProgress_ {true};
 };
 
 template<class T>
@@ -49,7 +47,7 @@ VolumeGridScanner<T>::VolumeGridScanner(const mwTPoint3d<T> &startPoint,
 template<class T>
 void VolumeGridScanner<T>::IncrementX() {
     currentPoint_.x(currentPoint_.x() + step_);
-    if (currentPoint_.x() > finishPoint_) {
+    if (currentPoint_.x() > finishPoint_.x()) {
         currentPoint_.x(startPoint_.x());
         IncrementY();
     }
@@ -58,7 +56,7 @@ void VolumeGridScanner<T>::IncrementX() {
 template<class T>
 void VolumeGridScanner<T>::IncrementY() {
     currentPoint_.y(currentPoint_.y() + step_);
-    if (currentPoint_.y() > finishPoint_) {
+    if (currentPoint_.y() > finishPoint_.y()) {
         currentPoint_.y(startPoint_.y());
         IncrementZ();
     }
@@ -68,7 +66,13 @@ template<class T>
 void VolumeGridScanner<T>::IncrementZ() {
     currentPoint_.z(currentPoint_.z() + step_);
     if (currentPoint_.z() > finishPoint_.z()) {
-        iterationFinished_ = true;
+        inProgress_ = false;
     }
+}
+
+template<class T>
+mwTPoint3d<T> VolumeGridScanner<T>::NextPoint() {
+    IncrementX();
+    return currentPoint_;
 }
 }

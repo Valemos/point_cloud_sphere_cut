@@ -34,29 +34,36 @@ void cadcam::PointCloud::SetPoint(const point3d &position, bool value) {
 }
 
 void cadcam::PointCloud::RemoveIntersection(const Volume *volume) {
-    // TODO "project" grid on volume and sample points_ from it
-    // if point is inside volume, it should be returned and removed from point cloud
-
-    IteratePoints();
-}
-
-void cadcam::PointCloud::IteratePoints() {
-    cadcam::VolumeGridScanner<size_t> indexStepper{
+    cadcam::VolumeGridScanner<size_t> indexScanner{
         {0, 0, 0},
-        {sizeX(), sizeY(), sizeZ()},
+        {sizeX() - 1, sizeY() - 1, sizeZ() - 1},
         1
     };
 
-    while (indexStepper.) {
+    cadcam::VolumeGridScanner<double> pointScanner{
+        referencePoint_,
+        IndicesToPoint(sizeX() - 1, sizeY() - 1, sizeZ() - 1),
+        delta_
+    };
 
+    while (indexScanner.InProgress()) {
+        auto index = indexScanner.NextPoint();
+        auto point = pointScanner.NextPoint();
+
+        auto isPointExists = points_.at(index.x()).at(index.y()).at(index.z());
+        if (isPointExists) {
+            if (volume->ContainsPoint(point)) {
+                isPointExists = false;
+            }
+        }
     }
 }
 
-cadcam::PointCloud::point3d cadcam::PointCloud::IndicesToPoint(int x, int y, int z) {
+cadcam::PointCloud::point3d cadcam::PointCloud::IndicesToPoint(size_t x, size_t y, size_t z) {
     return {
-        x * delta_ + referencePoint_.x(),
-        y * delta_ + referencePoint_.y(),
-        z * delta_ + referencePoint_.z(),
+        static_cast< double >(x) * delta_ + referencePoint_.x(),
+        static_cast< double >(y) * delta_ + referencePoint_.y(),
+        static_cast< double >(z) * delta_ + referencePoint_.z(),
     };
 }
 
@@ -65,10 +72,16 @@ size_t cadcam::PointCloud::sizeX() const {
 }
 
 size_t cadcam::PointCloud::sizeY() const {
-    return points_[0].size();
+    if (sizeX() > 0) {
+        return points_[0].size();
+    }
+    return 0;
 }
 
 size_t cadcam::PointCloud::sizeZ() const {
-
+    if (sizeY() > 0) {
+        return points_[0][0].size();
+    }
+    return 0;
 }
 

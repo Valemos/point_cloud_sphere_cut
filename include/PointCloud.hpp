@@ -3,6 +3,7 @@
 #include <vector>
 #include <functional>
 #include <mwTPoint3d.hpp>
+#include <glob.h>
 #include "Volume.hpp"
 
 namespace cadcam {
@@ -31,7 +32,6 @@ private:
     const double delta_;
 
     void SetPoint(const point3d &position, bool value);
-    void IteratePoints();
-    point3d IndicesToPoint(int x, int y, int z);
+    point3d IndicesToPoint(size_t x, size_t y, size_t z);
 };
 }
