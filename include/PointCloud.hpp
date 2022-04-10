@@ -27,6 +27,7 @@ public:
     size_t sizeZ() const;
 
     void SaveSkin(const std::string &fileName);
+
 private:
     const point3d referencePoint_;
     std::vector<std::vector<std::vector<bool>>> points_;
@@ -34,6 +35,6 @@ private:
 
     void SetPoint(const point3d &position, bool value);
     point3d IndicesToPoint(size_t x, size_t y, size_t z);
-    std::vector<cadcam::mwPoint3d<double>> GetSkinPoints();
+    std::vector<point3d> GetSkinPoints();
 };
 }

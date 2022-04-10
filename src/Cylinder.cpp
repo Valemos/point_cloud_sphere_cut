@@ -2,7 +2,7 @@
 
 cadcam::Cylinder::Cylinder(const mwTPoint3d<double>& start,
                            const mwTPoint3d<double>& finish,
-                           float radius)
+                           double radius)
     : start_(start), finish_(finish), radius_(radius){
 
     // precalculate inverse of system of equations to save on computations
@@ -24,12 +24,16 @@ bool cadcam::Cylinder::ContainsPoint(const mwTPoint3d<double> &point) const {
     auto e = finish_ - start_;
     auto m = start_ % finish_;
 
-    auto closestVec = point + e % (m + e % point) / ~e;
+    auto distanceToLine = ~(e % (point - start_)) / ~e;
+    if (distanceToLine > radius_)
+        return false;
+
+    auto closestPoint = point + (e % (m + e % point)) / (e * e);
 
     // conversion to barycentric coordinates
     double results[2] = {
-        1 + closestVec * start_,
-        1 + closestVec * finish_
+        1 + closestPoint * start_,
+        1 + closestPoint * finish_
     };
 
     double barycentricParams[2] = {
@@ -38,9 +42,6 @@ bool cadcam::Cylinder::ContainsPoint(const mwTPoint3d<double> &point) const {
     };
 
     // check if point is in bounds of cylinder
-    if (barycentricParams[0] >= 0 and barycentricParams[0] <= 1 and
-        barycentricParams[1] >= 0 and barycentricParams[1] <= 1) {
-        return ~(closestVec - point) <= radius_;
-    }
-    return false;
+    return barycentricParams[0] >= 0 and barycentricParams[0] <= 1 and
+            barycentricParams[1] >= 0 and barycentricParams[1] <= 1;
 }

@@ -13,7 +13,7 @@ public:
 
     const mwTPoint3d<double> & center() const;
     void SetCenter(const mwTPoint3d<double> &center);
-    const float & radius() const;
+    double radius() const;
     bool ContainsPoint(const mwTPoint3d<double> &point) const override;
 
 private:

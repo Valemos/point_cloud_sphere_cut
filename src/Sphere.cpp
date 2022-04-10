@@ -18,6 +18,6 @@ void cadcam::Sphere::SetCenter(const mwTPoint3d<double> &center) {
     center_ = center;
 }
 
-const float & cadcam::Sphere::radius() const {
+double cadcam::Sphere::radius() const {
     return radius_;
 }

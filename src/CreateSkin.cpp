@@ -1,4 +1,4 @@
-#include "include/CreateSkin.hpp"
+#include <CreateSkin.hpp>
 #include "PointCloud.hpp"
 #include "Sphere.hpp"
 #include "SphereLinearMotion.hpp"

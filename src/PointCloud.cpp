@@ -11,10 +11,10 @@ cadcam::PointCloud::PointCloud(const point3d &referencePoint,
                                : referencePoint_(referencePoint),
                                  delta_(delta) {
     points_.resize(nx);
-    for (int x = 0; x < nx; x++) {
+    for (size_t x = 0; x < nx; x++) {
         points_[x].resize(ny);
-        for (int y = 0; y < ny; y++) {
-            points_[x][y].resize(nz, false);
+        for (size_t y = 0; y < ny; y++) {
+            points_[x][y].resize(nz, true);
         }
     }
 }
@@ -89,7 +89,7 @@ size_t cadcam::PointCloud::sizeZ() const {
 void cadcam::PointCloud::SaveSkin(const std::string &fileName) {
     std::ofstream stream {fileName};
     for (const auto& point : GetSkinPoints()) {
-        stream << point.x() << " " << point.y() << " " << point.z() << '\n';
+        stream << point.x() << ' ' << point.y() << ' ' << point.z() << '\n';
     }
     stream.close();
 }

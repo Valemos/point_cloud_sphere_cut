@@ -1,14 +1,20 @@
 SRC := $(wildcard src/*.cpp)
-SRC += cutSphereMove.cpp
 CFLAGS = -I. -Wall -std=c++11 -I include
 
 all: cutSphereMove
 
-cutSphereMove: $(SRC)
+test.asc: cutSphereMove
+	./cutSphereMove
+
+cutSphereMove: cutSphereMove.cpp $(SRC)
 	g++ -o $@ $^ $(CFLAGS)
 
-test: test_iterations.cpp
+test: test_iterations.cpp $(SRC)
 	g++ -o $@ $^ $(CFLAGS)
 
 clean:
 	rm cutSphereMove test
+
+show_image: cutSphereMove test.asc
+	./cutSphereMove
+	./PointVisualizer_linux64 test.asc
