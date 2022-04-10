@@ -7,9 +7,12 @@ cadcam::PointCloud::PointCloud(const point3d &referencePoint,
                                unsigned long nx,
                                unsigned long ny,
                                unsigned long nz,
-                               double delta)
-                               : referencePoint_(referencePoint),
-                                 delta_(delta) {
+                               double delta) :
+                               grid_{
+                                referencePoint,
+                                IndicesToPoint(nx, ny, nz),
+                                delta
+                                } {
     points_.resize(nx);
     for (size_t x = 0; x < nx; x++) {
         points_[x].resize(ny);
@@ -29,42 +32,22 @@ void cadcam::PointCloud::RemovePoint(const point3d &position) {
 
 void cadcam::PointCloud::SetPoint(const point3d &position, bool value) {
     points_
-        [static_cast<size_t>(position.x() / delta_)]
-        [static_cast<size_t>(position.y() / delta_)]
-        [static_cast<size_t>(position.z() / delta_)] = value;
+        [static_cast<size_t>(position.x() / grid_.step() - grid_.start().x())]
+        [static_cast<size_t>(position.y() / grid_.step() - grid_.start().y())]
+        [static_cast<size_t>(position.z() / grid_.step() - grid_.start().z())] = value;
 }
 
 void cadcam::PointCloud::RemoveIntersection(const Volume *volume) {
-    cadcam::VolumeGridScanner<size_t> indexScanner{
-        {0, 0, 0},
-        {sizeX() - 1, sizeY() - 1, sizeZ() - 1},
-        1
-    };
-
-    cadcam::VolumeGridScanner<double> pointScanner{
-        referencePoint_,
-        IndicesToPoint(sizeX() - 1, sizeY() - 1, sizeZ() - 1),
-        delta_
-    };
-
-    while (indexScanner.InProgress()) {
-        auto index = indexScanner.NextPoint();
-        auto point = pointScanner.NextPoint();
-
-        auto isPointExists = points_.at(index.x()).at(index.y()).at(index.z());
-        if (isPointExists) {
-            if (volume->ContainsPoint(point)) {
-                isPointExists = false;
-            }
-        }
+    for (const auto& point : volume->GetInternalPoints(grid_)) {
+        RemovePoint(point);
     }
 }
 
 cadcam::PointCloud::point3d cadcam::PointCloud::IndicesToPoint(size_t x, size_t y, size_t z) {
     return {
-        static_cast< double >(x) * delta_ + referencePoint_.x(),
-        static_cast< double >(y) * delta_ + referencePoint_.y(),
-        static_cast< double >(z) * delta_ + referencePoint_.z(),
+        static_cast< double >(x) * grid_.step() + grid_.start().x(),
+        static_cast< double >(y) * grid_.step() + grid_.start().y(),
+        static_cast< double >(z) * grid_.step() + grid_.start().z(),
     };
 }
 

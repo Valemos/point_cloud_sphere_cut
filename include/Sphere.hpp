@@ -15,7 +15,7 @@ public:
     void SetCenter(const mwTPoint3d<double> &center);
     double radius() const;
     bool ContainsPoint(const mwTPoint3d<double> &point) const override;
-
+    std::vector<mwTPoint3d<double>> GetInternalPoints(const GridParameters3d<double> &grid) const override;
 private:
     mwTPoint3d<double> center_;
     double radius_;

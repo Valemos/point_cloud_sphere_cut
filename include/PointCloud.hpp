@@ -2,9 +2,10 @@
 
 #include <vector>
 #include <functional>
-#include <mwTPoint3d.hpp>
-#include <glob.h>
+#include "mwTPoint3d.hpp"
 #include "Volume.hpp"
+#include "GridParameters3d.hpp"
+
 
 namespace cadcam {
 class PointCloud {
@@ -29,9 +30,8 @@ public:
     void SaveSkin(const std::string &fileName);
 
 private:
-    const point3d referencePoint_;
+    GridParameters3d<double> grid_;
     std::vector<std::vector<std::vector<bool>>> points_;
-    const double delta_;
 
     void SetPoint(const point3d &position, bool value);
     point3d IndicesToPoint(size_t x, size_t y, size_t z);

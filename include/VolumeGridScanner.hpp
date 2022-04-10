@@ -1,17 +1,14 @@
 #pragma once
 
 #include <mwTPoint3d.hpp>
+#include "GridParameters3d.hpp"
 
 namespace cadcam {
 template < class T > class VolumeGridScanner {
 public:
-    explicit VolumeGridScanner(T gridStep);
-    VolumeGridScanner(const mwTPoint3d<T>& startPoint,
-                      const mwTPoint3d<T>& finishPoint,
-                      T gridStep);
+    explicit VolumeGridScanner(cadcam::GridParameters3d<T> grid);
 
     mwTPoint3d<T> NextPoint();
-
     void IncrementX();
     void IncrementY();
     void IncrementZ();
@@ -21,51 +18,38 @@ public:
     }
 
 private:
-    mwTPoint3d<T> startPoint_{};
-    mwTPoint3d<T> finishPoint_{};
     mwTPoint3d<T> currentPoint_{};
-    T step_{};
+    GridParameters3d<T> grid_;
 
     bool inProgress_ {true};
 };
 
 template<class T>
-VolumeGridScanner<T>::VolumeGridScanner(T gridStep) : step_(gridStep) {
-}
-
-
-template<class T>
-VolumeGridScanner<T>::VolumeGridScanner(const mwTPoint3d<T> &startPoint,
-                                        const mwTPoint3d<T> &finishPoint,
-                                        T gridStep) :
-                                        startPoint_(startPoint),
-                                        finishPoint_(finishPoint),
-                                        currentPoint_(startPoint),
-                                        step_(gridStep) {
+VolumeGridScanner<T>::VolumeGridScanner(cadcam::GridParameters3d<T> grid) : grid_(grid) {
 }
 
 template<class T>
 void VolumeGridScanner<T>::IncrementX() {
-    currentPoint_.x(currentPoint_.x() + step_);
-    if (currentPoint_.x() > finishPoint_.x()) {
-        currentPoint_.x(startPoint_.x());
+    currentPoint_.x(currentPoint_.x() + grid_.step());
+    if (currentPoint_.x() > grid_.finish().x()) {
+        currentPoint_.x(grid_.start().x());
         IncrementY();
     }
 }
 
 template<class T>
 void VolumeGridScanner<T>::IncrementY() {
-    currentPoint_.y(currentPoint_.y() + step_);
-    if (currentPoint_.y() > finishPoint_.y()) {
-        currentPoint_.y(startPoint_.y());
+    currentPoint_.y(currentPoint_.y() + grid_.step());
+    if (currentPoint_.y() > grid_.finish().y()) {
+        currentPoint_.y(grid_.start().y());
         IncrementZ();
     }
 }
 
 template<class T>
 void VolumeGridScanner<T>::IncrementZ() {
-    currentPoint_.z(currentPoint_.z() + step_);
-    if (currentPoint_.z() > finishPoint_.z()) {
+    currentPoint_.z(currentPoint_.z() + grid_.step());
+    if (currentPoint_.z() > grid_.finish().z()) {
         inProgress_ = false;
     }
 }

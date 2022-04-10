@@ -45,3 +45,8 @@ bool cadcam::Cylinder::ContainsPoint(const mwTPoint3d<double> &point) const {
     return barycentricParams[0] >= 0 and barycentricParams[0] <= 1 and
             barycentricParams[1] >= 0 and barycentricParams[1] <= 1;
 }
+
+std::vector<cadcam::mwTPoint3d<double>>
+cadcam::Cylinder::GetInternalPoints(const cadcam::GridParameters3d<double> &grid) const {
+    return std::vector<mwTPoint3d<double>>();
+}
