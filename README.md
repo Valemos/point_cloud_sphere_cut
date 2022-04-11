@@ -29,8 +29,7 @@ if given point belongs to this object or not.
 
 To manipulate all points [PointCloud](./include/PointCloud.hpp) class is used.
 
-To convert between actual points and indices of grid special member functions are used
-`GridParameters3d::PointToIndex` and `GridParameters3d::IndexToPoint`.
+To convert between actual points and indices of grid special member functions are used.
 
 ## Algorithm description
 
@@ -51,9 +50,7 @@ Dashed line represents actual function, sampled with discrete fixed step of x
 
 [Volume](./include/Volume.hpp) is a virtual object, which can be used with PointCloud instance to find intersections at grid nodes.
 
-It contains the member function `Volume::GetInternalPoints` 
-It must return all points inside an object lying on global grid.
-Function is implemented and optimized of each object separately.
+It contains the member function which returns all points inside an object lying on global grid.
 
 ### SphereLinearMotion
 
