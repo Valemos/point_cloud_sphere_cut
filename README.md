@@ -95,3 +95,9 @@ For example, here is such situation.
 
 ![Discrete step example](images/discrete_step_problem.jpg)
 
+
+# Task solution
+
+After running program and visualizing it, following results produced
+
+![Program results](images/program_results.jpg)
