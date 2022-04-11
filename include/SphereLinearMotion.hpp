@@ -12,8 +12,8 @@ public:
     bool ContainsPoint(const mwTPoint3d<double> &point) const override;
     std::vector<mwTPoint3d<double>> GetInternalPoints(const GridParameters3d<double> &grid) const override;
 private:
-    Sphere sphere;
-    Cylinder cylinder;
+    Sphere sphere_;
+    Cylinder cylinder_;
 };
 }
 

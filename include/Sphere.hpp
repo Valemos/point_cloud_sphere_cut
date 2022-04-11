@@ -19,5 +19,6 @@ public:
 private:
     mwTPoint3d<double> center_;
     double radius_;
+    double radiusSquared_;
 };
 }

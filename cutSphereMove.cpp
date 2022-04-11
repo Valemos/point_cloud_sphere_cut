@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 	//Discrete step_ for move function calculation
 	const double deltaT = 0.01;
 
-	//Radius of the sphere
+	//Radius of the sphere_
 	const double sphereRad = 5.;
 
 	//Name of the file to write the skin data to

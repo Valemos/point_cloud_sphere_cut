@@ -15,12 +15,14 @@
 
 #include <mwIdxRangeException.hpp>
 #include <cmath>
+#include "Comparison.hpp"
 
 #ifdef MW_5AXUTIL_DLL_VERSION
 #include	"5axutil_dllDefinition.hpp"
 #else		
 #define		MW_5AXUTIL_API
 #endif
+
 
 namespace cadcam
 {
@@ -124,13 +126,13 @@ namespace cadcam
 		  \returns <b>true</b> if both tools contain the same parameters,
 		  <b>false</b> otherwise
 		*/
-		inline bool operator==( const mwTPoint3d &tc )
+		inline bool operator==( const mwTPoint3d &tc ) const
 		{
 			return
-			elems[0] == tc.elems[0] &&
-			elems[1] == tc.elems[1] &&
-			elems[2] == tc.elems[2];
-		};
+                isEqual(elems[0], tc.elems[0]) &&
+                isEqual(elems[1], tc.elems[1]) &&
+                isEqual(elems[2], tc.elems[2]);
+		}
 
 //#############################################################################
 
@@ -325,7 +327,7 @@ namespace cadcam
 
 	private:
 		T elems[3];
-	};
+    };
 
 //#############################################################################
 

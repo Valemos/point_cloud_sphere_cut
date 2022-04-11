@@ -25,7 +25,8 @@ private:
 };
 
 template<class T>
-VolumeGridScanner<T>::VolumeGridScanner(cadcam::GridParameters3d<T> grid) : grid_(grid) {
+VolumeGridScanner<T>::VolumeGridScanner(cadcam::GridParameters3d<T> grid) :
+    currentPoint_(grid.start()), grid_(grid) {
 }
 
 template<class T>

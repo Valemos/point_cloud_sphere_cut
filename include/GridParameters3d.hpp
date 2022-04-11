@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mwTPoint3d.hpp"
+#include <cmath>
 
 namespace cadcam {
 template < class T > class GridParameters3d {
@@ -29,11 +30,19 @@ public:
         return step_;
     }
 
-    mwTPoint3d<double> SnapToGrid(const mwTPoint3d<double>& point) const {
+    mwTPoint3d<T> SnapDown(const mwTPoint3d<T>& point) const {
         return {
-            RoundToStep(point.x(), start_.x()),
-            RoundToStep(point.y(), start_.y()),
-            RoundToStep(point.z(), start_.z())
+            RoundToStepDown(point.x(), start_.x()),
+            RoundToStepDown(point.y(), start_.y()),
+            RoundToStepDown(point.z(), start_.z())
+        };
+    }
+
+    mwTPoint3d<T> SnapUp(const mwTPoint3d<T>& point) const {
+        return {
+            RoundToStepUp(point.x(), start_.x()),
+            RoundToStepUp(point.y(), start_.y()),
+            RoundToStepUp(point.z(), start_.z())
         };
     }
 
@@ -42,8 +51,13 @@ private:
     mwTPoint3d<T> finish_{};
     T step_{};
 
-    inline T RoundToStep(T value, T centerOffset) const {
-        auto gridCell = static_cast<long long>((value - centerOffset) / step_);
+    inline T RoundToStepDown(T value, T centerOffset) const {
+        auto gridCell = std::floor((value - centerOffset) / step_);
+        return gridCell * step_ + centerOffset;
+    }
+
+    inline T RoundToStepUp(T value, T centerOffset) const {
+        auto gridCell = std::ceil((value - centerOffset) / step_);
         return gridCell * step_ + centerOffset;
     }
 };

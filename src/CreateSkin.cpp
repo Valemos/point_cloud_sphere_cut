@@ -1,4 +1,5 @@
 #include <CreateSkin.hpp>
+#include <iostream>
 #include "PointCloud.hpp"
 #include "Sphere.hpp"
 #include "SphereLinearMotion.hpp"
@@ -12,18 +13,25 @@ void CreateSkin( const cadcam::mwTPoint3d<double>& refPoint,
     cadcam::PointCloud cloud{refPoint, nx, ny, nz, delta};
 
     double time = func.GetBeginParameter();
-    cadcam::Sphere sphereTool {func.Evaluate(time), sphereRad};
+    auto nextPoint = func.Evaluate(time);
     time += deltaT;
 
+    // remove initial tool position
+    cadcam::Sphere sphereTool {nextPoint, sphereRad};
     cloud.RemoveIntersection(&sphereTool);
 
     while(time <= func.GetEndParameter()) {
-        auto next_point = func.Evaluate(time);
+        nextPoint = func.Evaluate(time);
         time += deltaT;
 
-        cadcam::SphereLinearMotion motion(sphereTool, next_point);
+        // remove resulting movement
+        cadcam::SphereLinearMotion motion(sphereTool, nextPoint);
         cloud.RemoveIntersection(&motion);
+
+        sphereTool.SetCenter(nextPoint);
+        std::cout << "time: " << time << " / " << func.GetEndParameter() << '\n';
     }
+    std::cout << std::flush;
 
     cloud.SaveSkin(skinFileName);
 }

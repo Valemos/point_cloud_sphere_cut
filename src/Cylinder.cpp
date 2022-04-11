@@ -41,12 +41,33 @@ bool cadcam::Cylinder::ContainsPoint(const mwTPoint3d<double> &point) const {
         results[0] * inverseEquations[1][0] + results[1] * inverseEquations[1][1]
     };
 
-    // check if point is in bounds of cylinder
+    // check if point is in bounds of cylinder_
     return barycentricParams[0] >= 0 and barycentricParams[0] <= 1 and
             barycentricParams[1] >= 0 and barycentricParams[1] <= 1;
 }
 
 std::vector<cadcam::mwTPoint3d<double>>
 cadcam::Cylinder::GetInternalPoints(const cadcam::GridParameters3d<double> &grid) const {
-    return std::vector<mwTPoint3d<double>>();
+    std::vector<mwTPoint3d<double>> points;
+
+    mwTPoint3d<double> minPoint {
+        std::min(start_.x(), finish_.x()) - radius_,
+        std::min(start_.y(), finish_.y()) - radius_,
+        std::min(start_.z(), finish_.z()) - radius_,
+    };
+
+    mwTPoint3d<double> maxPoint {
+        std::max(start_.x(), finish_.x()) + radius_,
+        std::max(start_.y(), finish_.y()) + radius_,
+        std::max(start_.z(), finish_.z()) + radius_,
+    };
+
+    cadcam::GridParameters3d<double> cylinderRegion {
+        grid.SnapDown(minPoint),
+        grid.SnapUp(maxPoint),
+        grid.step()
+    };
+
+    ScanRegion(cylinderRegion, points);
+    return points;
 }
