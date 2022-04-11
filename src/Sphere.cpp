@@ -32,8 +32,8 @@ cadcam::Sphere::GetInternalPoints(const cadcam::GridParameters3d<double> &grid) 
     auto sphereFinish = center_ + mwTPoint3d<double>{radius_, radius_, radius_};
 
     cadcam::GridParameters3d<double> sphereRegion {
-    grid.SnapDown(sphereStart),
-    grid.SnapUp(sphereFinish),
+        grid.RoundDown(sphereStart),
+        grid.RoundUp(sphereFinish),
     grid.step()
     };
 

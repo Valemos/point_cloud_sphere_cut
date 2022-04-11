@@ -123,10 +123,10 @@ TEST(TestIterators, TestScanner) {
 
 TEST(TestGrid, TestSnapToGrid) {
     const cadcam::GridParameters3d<double> grid {1.5};
-    EXPECT_TRUE(grid.SnapDown({0.4, -0.4, 0.9})
+    EXPECT_TRUE(grid.RoundDown({0.4, -0.4, 0.9})
                 == point3d(0, -1.5, 0));
-    EXPECT_TRUE(grid.SnapDown({1.1, 2.1, 3.1})
+    EXPECT_TRUE(grid.RoundDown({1.1, 2.1, 3.1})
                 == point3d(0, 1.5, 3));
-    EXPECT_TRUE(grid.SnapUp({0.1, -0.9, 0.6})
+    EXPECT_TRUE(grid.RoundUp({0.1, -0.9, 0.6})
                 == point3d(1.5, 0, 1.5));
 }

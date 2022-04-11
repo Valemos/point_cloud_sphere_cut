@@ -2,10 +2,10 @@
 #include <SphereLinearMotion.hpp>
 
 cadcam::SphereLinearMotion::SphereLinearMotion(
-    const Sphere& startSphere,
+    const std::shared_ptr<Sphere>& startSphere,
     const mwTPoint3d<double>& destination)
-    : sphere_(destination, startSphere.radius()),
-      cylinder_(startSphere.center(), destination, startSphere.radius()) {
+    : sphere_(destination, startSphere->radius()),
+      cylinder_(startSphere->center(), destination, startSphere->radius()) {
 }
 
 bool cadcam::SphereLinearMotion::ContainsPoint(const mwTPoint3d<double> &point) const {

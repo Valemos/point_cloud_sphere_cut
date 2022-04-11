@@ -63,8 +63,8 @@ cadcam::Cylinder::GetInternalPoints(const cadcam::GridParameters3d<double> &grid
     };
 
     cadcam::GridParameters3d<double> cylinderRegion {
-        grid.SnapDown(minPoint),
-        grid.SnapUp(maxPoint),
+        grid.RoundDown(minPoint),
+        grid.RoundUp(maxPoint),
         grid.step()
     };
 

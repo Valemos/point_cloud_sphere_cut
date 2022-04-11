@@ -4,15 +4,15 @@ project(cutSphereMove)
 
 add_library(pointCloud
         src/CreateSkin.cpp
-        src/Cylinder.cpp
         src/mwArcFunction.cpp
         src/mwException.cpp
         src/mwIdxRangeException.cpp
         src/PointCloud.cpp
+        src/Volume.cpp
+        src/Cylinder.cpp
         src/Sphere.cpp
         src/SphereLinearMotion.cpp
         src/VolumeGridScanner.cpp
-        src/GridParameters3d.cpp
         )
 target_include_directories(pointCloud PUBLIC include)
 

@@ -1,7 +1,5 @@
 #include "PointCloud.hpp"
 #include <VolumeGridScanner.hpp>
-#include <VolumeGridScanner.hpp>
-#include <fstream>
 
 cadcam::PointCloud::PointCloud(const point3d &referencePoint,
                                unsigned long nx,
@@ -35,7 +33,7 @@ void cadcam::PointCloud::SetPoint(const point3d &position, bool value) {
     points_[index.x()][index.y()][index.z()] = value;
 }
 
-void cadcam::PointCloud::RemoveIntersection(const Volume *volume) {
+void cadcam::PointCloud::RemoveIntersection(const std::shared_ptr<Volume>& volume) {
     for (const auto& point : volume->GetInternalPoints(grid_)) {
         RemovePoint(point);
     }
@@ -57,14 +55,6 @@ size_t cadcam::PointCloud::sizeZ() const {
         return points_[0][0].size();
     }
     return 0;
-}
-
-void cadcam::PointCloud::SaveSkin(const std::string &fileName) {
-    std::ofstream stream {fileName};
-    for (const auto& point : GetSkinPoints()) {
-        stream << point.x() << ' ' << point.y() << ' ' << point.z() << '\n';
-    }
-    stream.close();
 }
 
 std::vector<cadcam::PointCloud::point3d> cadcam::PointCloud::GetSkinPoints() {
