@@ -42,6 +42,9 @@ public:
         return step_;
     }
 
+    /*
+     * rounds given point to closest grid node in given direction
+     */
     mwTPoint3d<T> SnapDown(const mwTPoint3d<T> &point) const {
         return {
             RoundToStepDown(point.x(), start_.x()),
@@ -58,6 +61,13 @@ public:
         };
     }
 
+    /*
+     * Index <-> Point Conversion functions
+     *
+     * It is assumed, that start_ point is (0, 0, 0)
+     * and all points are located at grid nodes in +x, +y and +z directions
+     * otherwise overflow might happen
+     */
     mwTPoint3d<size_t> PointToIndex(const mwTPoint3d<T> &point) const {
         return {
             static_cast<size_t>(point.x() / step_ - start_.x()),
