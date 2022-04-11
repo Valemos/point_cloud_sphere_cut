@@ -34,7 +34,6 @@ private:
     std::vector<std::vector<std::vector<bool>>> points_;
 
     void SetPoint(const point3d &position, bool value);
-    point3d IndicesToPoint(size_t x, size_t y, size_t z);
     std::vector<point3d> GetSkinPoints();
 };
 }

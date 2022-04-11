@@ -10,9 +10,9 @@ cadcam::PointCloud::PointCloud(const point3d &referencePoint,
                                double delta) :
                                grid_{
                                 referencePoint,
-                                IndicesToPoint(nx, ny, nz),
                                 delta
                                 } {
+    grid_.SetFinish(grid_.IndexToPoint({nx, ny, nz}));
     points_.resize(nx);
     for (size_t x = 0; x < nx; x++) {
         points_[x].resize(ny);
@@ -31,24 +31,14 @@ void cadcam::PointCloud::RemovePoint(const point3d &position) {
 }
 
 void cadcam::PointCloud::SetPoint(const point3d &position, bool value) {
-    points_
-        [static_cast<size_t>(position.x() / grid_.step() - grid_.start().x())]
-        [static_cast<size_t>(position.y() / grid_.step() - grid_.start().y())]
-        [static_cast<size_t>(position.z() / grid_.step() - grid_.start().z())] = value;
+    auto index = grid_.PointToIndex(position);
+    points_[index.x()][index.y()][index.z()] = value;
 }
 
 void cadcam::PointCloud::RemoveIntersection(const Volume *volume) {
     for (const auto& point : volume->GetInternalPoints(grid_)) {
         RemovePoint(point);
     }
-}
-
-cadcam::PointCloud::point3d cadcam::PointCloud::IndicesToPoint(size_t x, size_t y, size_t z) {
-    return {
-        static_cast< double >(x) * grid_.step() + grid_.start().x(),
-        static_cast< double >(y) * grid_.step() + grid_.start().y(),
-        static_cast< double >(z) * grid_.step() + grid_.start().z(),
-    };
 }
 
 size_t cadcam::PointCloud::sizeX() const {
@@ -88,7 +78,7 @@ std::vector<cadcam::PointCloud::point3d> cadcam::PointCloud::GetSkinPoints() {
             while(not zColumn[topPointIndex]) {
                 topPointIndex--;
             }
-            skinPoints.push_back(IndicesToPoint(x, y, topPointIndex));
+            skinPoints.push_back(grid_.IndexToPoint({x, y, topPointIndex}));
         }
     }
 

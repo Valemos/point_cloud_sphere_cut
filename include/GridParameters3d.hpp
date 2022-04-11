@@ -4,7 +4,8 @@
 #include <cmath>
 
 namespace cadcam {
-template < class T > class GridParameters3d {
+template<class T>
+class GridParameters3d {
 public:
 
     explicit GridParameters3d(T step) : start_{0, 0, 0}, finish_{INFINITY, INFINITY, INFINITY}, step_(step) {
@@ -13,24 +14,35 @@ public:
     GridParameters3d(const mwTPoint3d<T> &start,
                      const mwTPoint3d<T> &finish,
                      T step) :
-                     start_(start),
-                     finish_(finish),
-                     step_(step) {
+        start_(start),
+        finish_(finish),
+        step_(step) {
     }
 
-    const mwTPoint3d<T> & start() const {
+    GridParameters3d(const mwTPoint3d<T> &start,
+                     T step) :
+        start_(start),
+        finish_{INFINITY, INFINITY, INFINITY},
+        step_(step) {
+    }
+
+    const mwTPoint3d<T> &start() const {
         return start_;
     }
 
-    const mwTPoint3d<T> & finish() const {
+    const mwTPoint3d<T> &finish() const {
         return finish_;
     }
 
-    const T & step() const {
+    void SetFinish(const mwTPoint3d<double>& point) {
+        finish_ = point;
+    }
+
+    const T &step() const {
         return step_;
     }
 
-    mwTPoint3d<T> SnapDown(const mwTPoint3d<T>& point) const {
+    mwTPoint3d<T> SnapDown(const mwTPoint3d<T> &point) const {
         return {
             RoundToStepDown(point.x(), start_.x()),
             RoundToStepDown(point.y(), start_.y()),
@@ -38,11 +50,27 @@ public:
         };
     }
 
-    mwTPoint3d<T> SnapUp(const mwTPoint3d<T>& point) const {
+    mwTPoint3d<T> SnapUp(const mwTPoint3d<T> &point) const {
         return {
             RoundToStepUp(point.x(), start_.x()),
             RoundToStepUp(point.y(), start_.y()),
             RoundToStepUp(point.z(), start_.z())
+        };
+    }
+
+    mwTPoint3d<size_t> PointToIndex(const mwTPoint3d<T> &point) const {
+        return {
+            static_cast<size_t>(point.x() / step_ - start_.x()),
+            static_cast<size_t>(point.y() / step_ - start_.y()),
+            static_cast<size_t>(point.z() / step_ - start_.z()),
+        };
+    }
+
+    mwTPoint3d<T> IndexToPoint(const mwTPoint3d<size_t> &index) const {
+        return {
+            static_cast< double >(index.x()) * step_ + start_.x(),
+            static_cast< double >(index.y()) * step_ + start_.y(),
+            static_cast< double >(index.z()) * step_ + start_.z()
         };
     }
 
